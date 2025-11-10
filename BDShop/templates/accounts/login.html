@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="signup-container">
+    <h2>Login</h2>
+
+    <form method="POST" autocomplete="off">
+        {% csrf_token %}
+        
+        {% if error %}
+            <div class="text-danger">{{ error }}</div>
+        {% endif %}
+        <input 
+            type="email" 
+            name="email" 
+            placeholder="Email Address" 
+            class="input-box" 
+            autocomplete="new-email" 
+            required
+        >
+
+        <!-- Password field -->
+        <input 
+            type="password" 
+            name="password" 
+            placeholder="Password" 
+            class="input-box" 
+            autocomplete="new-password" 
+            required
+        >
+            <p class="text-center mt-3">
+                       <a href="{% url 'forgotpass' %}">Forget Password</a>
+    </p>
+        <button type="submit" class="btn">Login</button>
+    </form>
+
+    <p class="text-center mt-3">
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
+    </p>
+</div>
+{% endblock %}

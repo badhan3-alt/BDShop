@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - BD Shop{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'dashboard.css' %}">
+
+<div class="dashboard-wrapper">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li class="active">My order history</li>
+            <li><a href=>Transactions</a></li>
+            <li><a href=>Return & refunds</a></li>
+            <li><a href=>Settings</a></li>
+            <li><a href=>My selling items</a></li>
+            <li><a href=>Received orders</a></li>
+        </ul>
+
+        <a class="logout-btn" href="{% url 'logout' %}">🔌 Log out</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="dashboard-content">
+
+        <h2 class="text-center mb-4">📦 Your Orders</h2>
+
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card mb-4">
+                <div class="order-header">
+                    <span><strong>Order ID:</strong> {{ order.id }}</span>
+                    <span><strong>Order Date:</strong> {{ order.date|date:"d F Y" }}</span>
+                </div>
+
+                <p><strong>Delivery to:</strong> {{ order.user.full_name }}, {{ order.user.phone }}, {{ order.user.address }}</p>
+                <p><strong>Payment:</strong> {{ order.payment_method }} — <strong>Total: ${{ order.total|floatformat:2 }}</strong></p>
+
+                <hr>
+
+                <div class="order-items">
+                    {% for item in order.items.all %}
+                    <div class="order-item">
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        <div class="info">
+                            {{ item.product.name }} <br>
+                            <span class="price">৳ {{ item.product.price|floatformat:2 }}</span>
+                        </div>
+                        <div class="actions">
+                            <a href="{% url 'track_order' order.id %}" class="btn btn-sm btn-primary">Track Order</a>
+                            <a href="{% url 'order_details' order.id %}" class="btn btn-sm btn-secondary">Details</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info text-center mt-4">
+                <p>You have not placed any orders yet.</p>
+                <a href="{% url 'store' %}" class="btn btn-outline-primary mt-2">Shop Now</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

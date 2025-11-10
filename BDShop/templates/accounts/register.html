@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="signup-container">
+    <h2>Create New Account</h2>
+
+    <form method="POST" autocomplete="off">
+       
+        
+        {{ form.non_field_errors }}
+        
+        <!-- Full name -->
+        {{ form.full_name }}
+        {% csrf_token %}
+        {% for error in form.full_name.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+
+        <!-- Username -->
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+
+        <!-- Email -->
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+
+        <!-- Password -->
+        {{ form.password1 }}
+        {% for error in form.password1.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+
+        <!-- Confirm Password -->
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+
+        <button type="submit" class="btn">Sign Up</button>
+    </form>
+
+    <p class="text-center mt-3">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+{% endblock %}

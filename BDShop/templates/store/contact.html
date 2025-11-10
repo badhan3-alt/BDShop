@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - BD Shop{% endblock %}
+
+{% block content %}
+
+<style>
+    .contact-container {
+  background-color: whitesmoke; 
+  color: black;
+  text-align: center;
+  padding: 60px 20px;
+  border-radius: 12px;
+  margin: 40px auto;
+  max-width: 900px;
+  box-shadow: 0 0 20px black;
+}
+
+.contact-container h2 {
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  color:#ff6600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.contact-info {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.contact-info div {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 10px;
+  width: 250px;
+  transition: 0.3s ease;
+}
+
+.contact-info div:hover {
+    color: black;
+  background: #ff6600;
+  transform: translateY(-6px);
+}
+
+.contact-info h3 {
+  color:black;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+</style>
+<div class="contact-container">
+  <h2>Contact Us</h2>
+  <div class="contact-info">
+    <div>
+      <h3>📍 Address</h3>
+      <p>Sylhet, Bangladesh</p>
+    </div>
+    <div>
+      <h3>📞 Phone</h3>
+      <p>01648735492</p>
+    </div>
+    <div>
+      <h3>📧 Email</h3>
+      <p>badhandas914@gmail.com</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

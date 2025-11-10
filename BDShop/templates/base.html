@@ -1,0 +1,140 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<!DOCTYPE html>
+<html lang="en">
+   <link rel="icon" type="image/png" href="{% static 'ab.png' %}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}BD Shop{% endblock %}</title>
+
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'signup.css' %}">
+  <link rel="stylesheet" href="{% static 'login.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/ab.png' %}">
+  <link rel="stylesheet" href="{% static 'static/dashboard.css' %}">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  {% block extra_head %}{% endblock %}
+
+</head>
+  
+<body>
+
+<style>
+  .header {
+    background-color: black;
+    color: aliceblue;
+  }
+  .nav-item:hover{
+    color: #ff6600;
+  }
+  nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+.btn btn-outline-primary:hover{
+  color: #ff6600;
+}
+  .btn-outline-primary:hover {
+    background-color: #ff6600;
+    border-color: #ff6600;
+    color: white;
+  }
+
+</style>
+
+
+  <!-- Header -->
+  <header class="header" >
+    <link rel="icon" type="png" href="{% static 'ab.png' %}">
+    <div class="container d-flex align-items-center justify-content-between flex-wrap">
+      <div class="logo mb-2 mb-md-0">
+        <a href="/" >BD Shop</a>
+      </div>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item"><a class="nav-item" href="{% url 'home' %}">Home</a></li>
+          {% if user.is_authenticated %}
+          <li >
+          <a class="nav-item" href="{% url 'logout' %}">Logout</a>
+          <a class="nav-item"  href="{% url 'dashboard' %}">Dashboard</a>
+          </li>
+          {% else %}
+          <li >
+          <a class="nav-item" href="{% url 'login' %}">Login</a>
+          </li>
+          <li >
+          <a class="nav-item" href="{% url 'register' %}">Register</a>
+          </li>
+          {% endif %}
+          <li ><a class="nav-item" href="{% url 'about' %}">About</a></li>
+          <li ><a class="nav-item" href="{% url 'contact' %}">Contact</a></li>
+          <li ><a class="nav-item" href="{% url 'store' %}">Store</a></li>
+        </ul>
+      </nav>
+
+<div class="d-flex align-items-center gap-3">
+    <!-- Search Form -->
+<!-- Search Form -->
+<form action="{% url 'search' %}" class="d-flex" role="search" method="GET">
+  <input 
+      class="form-control me-2" 
+      type="search" 
+      placeholder="Search..." 
+      aria-label="Search"  
+      name="keyword">
+  <button class="btn btn-outline-primary" type="submit">
+      <i class="bi bi-search"></i>
+  </button>
+</form>
+
+    <a href="{% url 'cart' %}" class="cartn">
+        <img class="cartn" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGd2sjxFQjvIeJHrB6h01ODTyCuzYmEwvy1w&s"
+            height="30" width="30" alt="Cart">
+    </a>
+</div>
+
+    </div>
+  </header>
+
+  
+  <main>
+    {% block content %}
+    
+    {% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-light py-4 mt-5">
+    <div class="container text-center">
+      <p class="mb-1 fw-bold">BD Shop</p>
+      <p class="small">Your one-stop shop for gadgets and more.</p>
+      <p class="small mb-0">&copy; {{ now|date:"Y" }} BD Shop. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

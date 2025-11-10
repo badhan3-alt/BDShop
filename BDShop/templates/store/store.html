@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>
+    {% if keyword %}
+        <h2>Search Results </h2>
+    {% else %}
+        Our Products
+    {% endif %}
+</h2>
+<div class="container py-5">
+
+  <div class="row">
+    <!-- Sidebar Filters -->
+    <div class="col-md-3 mb-4">
+    
+
+      <h4 class="mb-3">Filters</h4>
+      
+      <!-- Categories -->
+      <div class="mb-4">
+        <h5>Categories</h5>
+        <ul class="list-group">
+          {% for category in categories %}
+          <li class="list-group-item">
+            <a href="?category={{ category.id }}" class="text-decoration-none">
+              {{ category.name }}
+            </a>
+          </li>
+          {% empty %}
+          <li class="list-group-item text-muted">No categories found.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="col-md-9">
+      <div class="products-section">
+        <div class="mb-3">
+    {% if products %}
+        <strong>{{ products|length }}</strong> item{{ products|length|pluralize }} found
+    {% else %}
+        No items found
+    {% endif %}
+</div>
+
+
+
+
+        <div class="products-container">
+          {% for product in products %}
+          <div class="product-card">
+            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none">
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              <h3>{{ product.name }}</h3>
+              <p>${{ product.price }}</p>
+              <button class="btn-gradient" style="margin: 20px;">View Details</button>
+              
+
+            </a>
+          </div>
+          {% empty %}
+          <p>No products available.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
