@@ -4,28 +4,21 @@ from store.models import Product
 from django.contrib.auth.decorators import login_required
 
 
-# -------------------------
-# INTERNAL HELPER
-# -------------------------
 def _get_user_cart(request):
     """Get or create a cart for the logged-in user."""
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user)
     else:
-        # (optional) add session-based cart later
+        
         cart = None
     return cart
 
 
-# -------------------------
-# ADD ITEM TO CART
-# -------------------------
 @login_required
 def add_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart = _get_user_cart(request)
 
-    # Get or create CartItem
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
         product=product,
@@ -38,9 +31,6 @@ def add_cart(request, product_id):
     return redirect('cart')
 
 
-# -------------------------
-# REMOVE ONE QUANTITY
-# -------------------------
 @login_required
 def remove_cart(request, product_id):
     cart = _get_user_cart(request)
@@ -56,9 +46,6 @@ def remove_cart(request, product_id):
     return redirect('cart')
 
 
-# -------------------------
-# REMOVE ITEM COMPLETELY
-# -------------------------
 @login_required
 def remove_cart_item(request, product_id):
     cart = _get_user_cart(request)
@@ -68,9 +55,6 @@ def remove_cart_item(request, product_id):
     return redirect('cart')
 
 
-# -------------------------
-# DISPLAY CART PAGE
-# -------------------------
 @login_required
 def cart(request):
     cart = _get_user_cart(request)
@@ -85,9 +69,6 @@ def cart(request):
     return render(request, 'store/cart.html', context)
 
 
-# -------------------------
-# CHECKOUT PAGE
-# -------------------------
 @login_required
 def checkout(request):
     cart = _get_user_cart(request)
@@ -100,3 +81,20 @@ def checkout(request):
         'total': total,
     }
     return render(request, 'store/checkout.html', context)
+
+
+
+@login_required
+def checkout(request):
+    cart = Cart.objects.get(user=request.user)
+    cart_items = cart.items.all()
+
+    total = sum(item.total_price for item in cart_items)
+
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+    }
+    return render(request, 'cart/checkout.html', context)
+
+
