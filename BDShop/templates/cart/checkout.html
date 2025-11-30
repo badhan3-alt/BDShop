@@ -3,6 +3,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/check.css' %}">
+<form action="{% url 'orders:place_order' %}"method="POST"></form>
 <div class="checkout-container">
 
     <h2>Checkout</h2>

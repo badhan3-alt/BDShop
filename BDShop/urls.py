@@ -28,7 +28,10 @@ urlpatterns = [
     path('accounts/' ,include('accounts.urls')),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
-    path('orders/', include('orders.urls', namespace='orders')),
+    path('accounts/', include('accounts.urls')),
+
+    path('orders/', include('orders.urls')),
+
 
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,70 @@
+.payment-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  background: #f8f8f8;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.payment-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.payment-container h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.payment-container h5 {
+  text-align: right;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.payment-container p {
+  margin: 5px 0;
+  line-height: 1.4;
+}
+
+.payment-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.payment-container ul li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.btn-pay {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background: #1abc9c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-pay:hover {
+  background: #16a085;
+}
+
+@media(max-width: 768px) {
+  .payment-container {
+    padding: 15px;
+  }
+}

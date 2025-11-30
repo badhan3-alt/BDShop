@@ -111,29 +111,33 @@ def resetpassword_validate(request, uidb64, token):
 # ------------------------------------------------------------
 # RESET PASSWORD (Final Form)
 # ------------------------------------------------------------
-def resetPassword(request):
-    uid = request.session.get('uid')
-    if not uid:
+def resetPassword(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        # Token OK → show reset page
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if password == confirm_password:
+                user.set_password(password)
+                user.save()
+                messages.success(request, "Your password has been reset. You can now login.")
+                return redirect('login')
+            else:
+                messages.error(request, "Passwords do not match.")
+
+        return render(request, 'accounts/resetpassword.html')  # <- your template name
+
+    else:
+        # Token invalid → this is causing redirect
         messages.error(request, "Session expired. Please try again.")
         return redirect('forgotPassword')
-
-    user = Account.objects.get(pk=uid)
-
-    if request.method == 'POST':
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-
-        if password == confirm_password:
-            user.set_password(password)
-            user.save()
-            request.session.pop('uid', None)  # Clear session
-            messages.success(request, "Password reset successful! You can now login.")
-            return redirect('login')
-        else:
-            messages.error(request, "Passwords do not match.")
-            return redirect('resetPassword')
-
-    return render(request, 'accounts/resetPassword.html')
 
 
 # ------------------------------------------------------------
@@ -154,3 +158,5 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, "Activation link is invalid or expired!")
         return redirect("register")
+
+

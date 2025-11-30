@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'payment.css' %}">
+
+<div class="payment-container">
+    <h2>Payment for Order: {{ order.order_number }}</h2>
+
+    <h4>Billing Details:</h4>
+    <p>Name: {{ order.first_name }} {{ order.last_name }}</p>
+    <p>Email: {{ order.email }}</p>
+    <p>Phone: {{ order.phone }}</p>
+    <p>Address: {{ order.address_line_1 }}, {{ order.address_line_2 }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
+
+    <h4>Order Summary:</h4>
+    <ul>
+        {% for item in cart_items %}
+        <li>{{ item.product.name }} x {{ item.quantity }} <span>${{ item.product.price|floatformat:2 }}</span></li>
+        {% endfor %}
+    </ul>
+
+    <h5>Total: ${{ total|floatformat:2 }}</h5>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-pay">Pay Now</button>
+    </form>
+</div>
+{% endblock %}

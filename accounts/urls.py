@@ -1,7 +1,9 @@
-from django.urls import path
+
 from . import views
-from django.urls import path
+
 from . import views
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
     path('register/', views.register, name='register'),
@@ -13,11 +15,7 @@ urlpatterns = [
     path('forgot-password/', views.forgotPassword, name='forgotPassword'),
     path('reset-password-validate/<uidb64>/<token>/', views.resetpassword_validate, name='resetpassword_validate'),
     path('reset-password/', views.resetPassword, name='resetPassword'),
-
-
-
-
-
+    path('reset/<uidb64>/<token>/', views.resetPassword, name='resetPassword'),
 
 
 
