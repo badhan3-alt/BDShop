@@ -26,9 +26,9 @@
                     <td>{{ item.quantity }}</td>
                     <td>${{ item.product.price|floatformat:2 }}</td>
                     <td>
-                        <a href="{% url 'remove_cart' item.product.id %}" class="btn btn-sm btn-warning me-1">−</a>
-                        <a href="{% url 'add_cart' item.product.id %}" class="btn btn-sm btn-success me-1">+</a>
-                        <a href="{% url 'remove_cart_item' item.product.id %}" class="btn btn-sm btn-danger">Remove</a>
+                        <a href="{% url 'carts:remove_cart' item.product.id %}" class="btn btn-sm btn-warning me-1">−</a>
+                        <a href="{% url 'carts:add_cart' item.product.id %}" class="btn btn-sm btn-success me-1">+</a>
+                        <a href="{% url 'carts:remove_cart_item' item.product.id %}" class="btn btn-sm btn-danger">Remove</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* Main container */
+.orders-container {
+    width: 80%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 30px;
+}
+
+/* Header */
+.orders-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.orders-header .box-icon {
+    font-size: 40px;
+}
+
+.orders-header h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #ff6b00;
+}
+
+/* No orders box */
+.no-orders-box {
+    text-align: center;
+    padding: 40px;
+    background: #fff4de;
+    border-radius: 10px;
+    border: 1px solid #ffe4c2;
+}
+
+.shop-now-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #ff6b00;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.shop-now-btn:hover {
+    background: #e66000;
+}
+
+/* Order list */
+.order-card {
+    display: flex;
+    justify-content: space-between;
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e6e6e6;
+    margin-bottom: 15px;
+}
+
+.order-card:hover {
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.order-left strong {
+    font-size: 18px;
+}
+
+.order-left p {
+    margin: 5px 0 0;
+    color: #777;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff6b00;
+}
+
+</style>
+
+
+<div class="orders-container">
+
+    <div class="orders-header">
+        <span class="box-icon">📦</span>
+        <h2>Your Orders</h2>
+    </div>
+
+    {% if orders %}
+        <div class="order-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-left">
+                    <strong>Order #{{ order.order_number }}</strong>
+                    <p>{{ order.date }}</p>
+                </div>
+                <div class="order-right">
+                    <span class="total">Total: {{ order.order_total }}$</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="no-orders-box">
+            <p>You have not placed any orders yet.</p>
+            <a href="/store" class="shop-now-btn">Shop Now</a>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

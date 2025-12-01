@@ -46,18 +46,30 @@ def place_order(request):
             order.save()
 
             # Redirect to payment page
-            return redirect('orders:Payment', order_number=order_number)
+            
+            return redirect('orders:payment', order_number=order_number)
 
     return redirect('carts:checkout')
 
 
-
 @login_required
-def Payment(request, order_number):
-    order = get_object_or_404(Order, order_number=order_number)
+def payment_view(request, order_number):
+    order = get_object_or_404(Order, order_number=order_number, user=request.user)
     cart = Cart.objects.get(user=request.user)
     cart_items = cart.items.all()
     total = sum(item.product.price * item.quantity for item in cart_items)
+
+    if request.method == "POST":
+        # Simulate payment success for testing
+        payment_success = True
+
+        if payment_success:
+            # Clear cart after successful payment
+            CartItem.objects.filter(cart=cart).delete()
+            order.status = "Completed"
+            order.save()
+
+            return redirect('orders:order_complete', order_number=order.order_number)
 
     context = {
         'order': order,
@@ -65,6 +77,8 @@ def Payment(request, order_number):
         'total': total,
     }
     return render(request, 'orders/payment.html', context)
+
+
 
 
 from django.shortcuts import render, redirect
@@ -97,3 +111,83 @@ def checkout(request):
         'total': total,
     }
     return render(request, 'orders/checkout.html', context)
+
+
+
+from .models import Order, Payment
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def cod_order(request):
+    if request.method == 'POST':
+        order_number = request.POST.get('order_number')
+        order = get_object_or_404(Order, order_number=order_number, user=request.user)
+
+        # Create Payment record
+        payment = Payment.objects.create(
+            payment_id=f"COD-{order.order_number}",
+            payment_method="COD",
+            amount_paid=order.order_total,
+            status="Pending"
+        )
+
+        # Update order
+        order.payment = payment
+        order.status = "Completed"
+        order.is_ordered = True
+        order.save()
+
+        # 🔹 Clear cart
+        cart = Cart.objects.get(user=request.user)
+        CartItem.objects.filter(cart=cart).delete()
+
+        # Redirect to order complete page with order_number
+        return redirect('orders:order_complete', order_number=order.order_number)
+    
+    else:
+        return redirect('store')
+
+
+
+@login_required
+def process_bkash(request):
+    if request.method == 'POST':
+        trx_id = request.POST.get('trx_id')
+        order_number = request.POST.get('order_number')
+
+        # Get the order
+        order = get_object_or_404(Order, order_number=order_number, user=request.user)
+
+        # Create Payment record
+        payment = Payment.objects.create(
+            payment_id=trx_id,
+            payment_method='bKash',
+            amount_paid=order.order_total,
+            status='Completed'
+        )
+
+        # Update order
+        order.payment = payment
+        order.status = 'Completed'
+        order.is_ordered = True
+        order.save()
+
+        # 🔹 Clear the cart after successful payment
+        cart = Cart.objects.get(user=request.user)
+        CartItem.objects.filter(cart=cart).delete()
+
+        # Redirect to order complete page with order_number
+        return redirect('orders:order_complete', order_number=order.order_number)
+
+    else:
+        return redirect('store')
+
+
+@login_required
+def order_complete(request, order_number):
+    order = get_object_or_404(Order, order_number=order_number, user=request.user)
+    return render(request, 'orders/order_complete.html', {'order': order})
+
+
+
+

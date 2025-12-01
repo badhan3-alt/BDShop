@@ -7,24 +7,136 @@
 <div class="payment-container">
     <h2>Payment for Order: {{ order.order_number }}</h2>
 
+    <!-- Billing Details -->
     <h4>Billing Details:</h4>
     <p>Name: {{ order.first_name }} {{ order.last_name }}</p>
     <p>Email: {{ order.email }}</p>
     <p>Phone: {{ order.phone }}</p>
     <p>Address: {{ order.address_line_1 }}, {{ order.address_line_2 }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
 
+    <!-- Order Summary -->
     <h4>Order Summary:</h4>
     <ul>
         {% for item in cart_items %}
-        <li>{{ item.product.name }} x {{ item.quantity }} <span>${{ item.product.price|floatformat:2 }}</span></li>
+        <li>{{ item.product.name }} x {{ item.quantity }} 
+            <span>${{ item.product.price|floatformat:2 }}</span>
+        </li>
         {% endfor %}
     </ul>
-
     <h5>Total: ${{ total|floatformat:2 }}</h5>
 
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn-pay">Pay Now</button>
-    </form>
+    <!-- PAY NOW button -->
+    <button type="button" class="btn-pay" onclick="openPaymentOptions()">Pay Now</button>
 </div>
+
+<!-- ===========================
+      PAYMENT OPTIONS MODAL
+=========================== -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <h3>Select Payment Method</h3>
+
+        <!-- COD FORM -->
+        <form method="POST" action="{% url 'orders:cod_order' %}">
+            {% csrf_token %}
+            <input type="hidden" name="order_number" value="{{ order.order_number }}">
+            <button type="submit" class="payment-btn cod">Cash on Delivery (COD)</button>
+        </form>
+
+        <!-- bKash button -->
+        <button class="payment-btn bkash" onclick="showBkashForm()">bKash Payment</button>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<!-- ===========================
+      BKASH PAYMENT FORM MODAL
+=========================== -->
+<div id="bkashForm" class="modal">
+    <div class="modal-content">
+        <h3>bKash Payment</h3>
+        <p>Send <b>{{ total }}</b> BDT to this bKash number:</p>
+        <h2 style="color:#E2136E;">017XXXXXXXX</h2>
+
+        <!-- bKash PAYMENT FORM -->
+        <form method="POST" action="{% url 'orders:process_bkash' %}">
+            {% csrf_token %}
+            <input type="hidden" name="order_number" value="{{ order.order_number }}">
+            <input type="text" name="trx_id" placeholder="Enter bKash Transaction ID" required>
+            <button type="submit" class="payment-btn bkash">Confirm Payment</button>
+        </form>
+
+        <button class="close-btn" onclick="closeBkash()">Close</button>
+    </div>
+</div>
+
+<!-- ===========================
+      STYLES
+=========================== -->
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+}
+.payment-btn {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+.cod { background: #2ecc71; }
+.bkash { background: #E2136E; }
+.close-btn {
+    background: #444;
+    color:white;
+    border:none;
+    padding:10px;
+    width:100%;
+    border-radius:5px;
+}
+.btn-pay {
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:5px;
+    cursor:pointer;
+}
+</style>
+
+<!-- ===========================
+      JAVASCRIPT
+=========================== -->
+<script>
+function openPaymentOptions() {
+    document.getElementById("paymentModal").style.display="flex";
+}
+function closeModal() {
+    document.getElementById("paymentModal").style.display="none";
+}
+function showBkashForm() {
+    closeModal();
+    document.getElementById("bkashForm").style.display="flex";
+}
+function closeBkash() {
+    document.getElementById("bkashForm").style.display="none";
+}
+</script>
+
 {% endblock %}

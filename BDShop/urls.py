@@ -24,13 +24,20 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home,name='home'),
     path('store/', include('store.urls')),
-    path('cart/', include('carts.urls')),
+    path('carts/', include('carts.urls')),
     path('accounts/' ,include('accounts.urls')),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
-    path('accounts/', include('accounts.urls')),
-
     path('orders/', include('orders.urls')),
+
+    
+    path('accounts/dashboard/', include('dashboard.urls')),
+
+
+
+
+
+
 
 
 

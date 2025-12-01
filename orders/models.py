@@ -40,8 +40,11 @@ class Order(models.Model):
     status = models.CharField(max_length=10, choices=STATUS, default='New')
     ip = models.CharField(max_length=20, blank=True)
     is_ordered = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=20, blank=True)  # moved inside
+    payment_trx_id = models.CharField(max_length=50, blank=True)  # moved inside
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -60,4 +63,4 @@ class OrderProduct(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.product.product_name
+        return self.product.name  # use `name` instead of `product_name` per your Product model

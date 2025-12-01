@@ -258,12 +258,9 @@ body {
     <!-- Sidebar -->
     <div class="sidebar">
         <ul>
-            <li class="active">My order history</li>
-            <li><a href=>Transactions</a></li>
-            <li><a href=>Return & refunds</a></li>
-            <li><a href=>Settings</a></li>
-            <li><a href=>My selling items</a></li>
-            <li><a href=>Received orders</a></li>
+            <li><a href="{% url 'dashboard:my_orders' %}">My order history</a></li>
+
+
         </ul>
 
         <a class="logout-btn" href="{% url 'logout' %}">🔌 Log out</a>
@@ -271,8 +268,6 @@ body {
 
     <!-- Main content -->
     <div class="dashboard-content">
-
-        <h2 class="text-center mb-4">📦 Your Orders</h2>
 
         {% if orders %}
             {% for order in orders %}
@@ -285,7 +280,7 @@ body {
                 <p><strong>Delivery to:</strong> {{ order.user.full_name }}, {{ order.user.phone }}, {{ order.user.address }}</p>
                 <p><strong>Payment:</strong> {{ order.payment_method }} — <strong>Total: ${{ order.total|floatformat:2 }}</strong></p>
 
-                <hr>
+
 
                 <div class="order-items">
                     {% for item in order.items.all %}
@@ -306,8 +301,7 @@ body {
             {% endfor %}
         {% else %}
             <div class="alert alert-info text-center mt-4">
-                <p>You have not placed any orders yet.</p>
-                <a href="{% url 'store' %}" class="btn btn-outline-primary mt-2">Shop Now</a>
+
             </div>
         {% endif %}
 

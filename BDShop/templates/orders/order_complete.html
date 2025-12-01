@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="order-complete-container">
+    <h2>Thank you for your order!</h2>
+    <p>Your order <strong>{{ order.order_number }}</strong> has been successfully placed.</p>
+    <p>Status: <strong>{{ order.status }}</strong></p>
+    <p>Total Paid: ${{ order.order_total|floatformat:2 }}</p>
+
+    <h4>Billing Details:</h4>
+    <p>Name: {{ order.first_name }} {{ order.last_name }}</p>
+    <p>Email: {{ order.email }}</p>
+    <p>Phone: {{ order.phone }}</p>
+    <p>Address: {{ order.address_line_1 }}, {{ order.address_line_2 }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
+
+    <a href="{% url 'store' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+</div>
+
+<style>
+.order-complete-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+}
+.order-complete-container h2 {
+    color: #2ecc71;
+    margin-bottom: 20px;
+}
+.btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background: #3498db;
+}
+</style>
+{% endblock %}
