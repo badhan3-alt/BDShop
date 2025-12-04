@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import OrderForm  # make sure your form class is OrderForm (PascalCase)
+from .forms import OrderForm
 from .models import Order, OrderProduct, Payment
 from carts.models import Cart, CartItem
 import datetime
@@ -8,7 +8,6 @@ import datetime
 @login_required
 def place_order(request):
     current_user = request.user
-    # Get the cart for the user
     cart = get_object_or_404(Cart, user=current_user)
     cart_items = cart.items.all()
 
@@ -39,13 +38,11 @@ def place_order(request):
             order.ip = request.META.get('REMOTE_ADDR')
             order.save()
 
-            # Generate order number: YYYYMMDD + order.id
             today = datetime.date.today().strftime("%Y%m%d")
             order_number = today + str(order.id)
             order.order_number = order_number
             order.save()
 
-            # Redirect to payment page
             
             return redirect('orders:payment', order_number=order_number)
 
@@ -60,11 +57,9 @@ def payment_view(request, order_number):
     total = sum(item.product.price * item.quantity for item in cart_items)
 
     if request.method == "POST":
-        # Simulate payment success for testing
         payment_success = True
 
         if payment_success:
-            # Clear cart after successful payment
             CartItem.objects.filter(cart=cart).delete()
             order.status = "Completed"
             order.save()
@@ -89,21 +84,18 @@ def checkout(request):
 
     cart_items = []
 
-    # Authenticated user
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=current_user).first()
         if not cart:
             return redirect('store')
         cart_items = CartItem.objects.filter(cart=cart)
 
-    # Anonymous user (using session cart_id)
     else:
         cart_id = request.session.get('cart_id')
         if not cart_id:
             return redirect('store')
         cart_items = CartItem.objects.filter(cart__cart_id=cart_id)
 
-    # Calculate total
     total = sum(item.product.price * item.quantity for item in cart_items)
 
     context = {
@@ -123,7 +115,6 @@ def cod_order(request):
         order_number = request.POST.get('order_number')
         order = get_object_or_404(Order, order_number=order_number, user=request.user)
 
-        # Create Payment record
         payment = Payment.objects.create(
             payment_id=f"COD-{order.order_number}",
             payment_method="COD",
@@ -131,17 +122,14 @@ def cod_order(request):
             status="Pending"
         )
 
-        # Update order
         order.payment = payment
         order.status = "Completed"
         order.is_ordered = True
         order.save()
 
-        # 🔹 Clear cart
         cart = Cart.objects.get(user=request.user)
         CartItem.objects.filter(cart=cart).delete()
 
-        # Redirect to order complete page with order_number
         return redirect('orders:order_complete', order_number=order.order_number)
     
     else:
@@ -155,10 +143,8 @@ def process_bkash(request):
         trx_id = request.POST.get('trx_id')
         order_number = request.POST.get('order_number')
 
-        # Get the order
         order = get_object_or_404(Order, order_number=order_number, user=request.user)
 
-        # Create Payment record
         payment = Payment.objects.create(
             payment_id=trx_id,
             payment_method='bKash',
@@ -166,17 +152,14 @@ def process_bkash(request):
             status='Completed'
         )
 
-        # Update order
         order.payment = payment
         order.status = 'Completed'
         order.is_ordered = True
         order.save()
 
-        # 🔹 Clear the cart after successful payment
         cart = Cart.objects.get(user=request.user)
         CartItem.objects.filter(cart=cart).delete()
 
-        # Redirect to order complete page with order_number
         return redirect('orders:order_complete', order_number=order.order_number)
 
     else:

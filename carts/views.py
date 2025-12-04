@@ -3,14 +3,12 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem
 from store.models import Product
 
-# Helper to get or create a cart for the logged-in user
 def _get_user_cart(request):
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user)
         return cart
     return None
 
-# Add product to cart
 @login_required
 def add_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -28,7 +26,6 @@ def add_cart(request, product_id):
     cart_item.save()
     return redirect('carts:cart')
 
-# Remove 1 quantity of a product from cart
 @login_required
 def remove_cart(request, product_id):
     cart = _get_user_cart(request)
@@ -46,7 +43,6 @@ def remove_cart(request, product_id):
 
     return redirect('carts:cart')
 
-# Remove entire cart item
 @login_required
 def remove_cart_item(request, product_id):
     cart = _get_user_cart(request)
@@ -58,7 +54,6 @@ def remove_cart_item(request, product_id):
     cart_item.delete()
     return redirect('carts:cart')
 
-# Cart view
 @login_required
 def cart(request):
     cart = _get_user_cart(request)
@@ -72,7 +67,6 @@ def cart(request):
     }
     return render(request, 'store/cart.html', context)
 
-# Checkout view
 @login_required
 def checkout(request):
     cart = _get_user_cart(request)

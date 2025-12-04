@@ -1,4 +1,4 @@
 from django.contrib import admin
 from .models import CartItem
 
-admin.site.register(CartItem)  # Only once
+admin.site.register(CartItem)

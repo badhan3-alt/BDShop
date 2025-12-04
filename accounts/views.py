@@ -13,12 +13,9 @@ from django.contrib.auth import get_user_model
 from .forms import RegistrationForm
 from .models import Account
 
-User = get_user_model()   # Custom user model (Account)
+User = get_user_model()
 
 
-# ------------------------------------------------------------
-# REGISTER
-# ------------------------------------------------------------
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -31,9 +28,6 @@ def register(request):
     return render(request, 'accounts/register.html', {'form': form})
 
 
-# ------------------------------------------------------------
-# LOGIN
-# ------------------------------------------------------------
 def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -48,25 +42,16 @@ def login_view(request):
     return render(request, 'accounts/login.html')
 
 
-# ------------------------------------------------------------
-# LOGOUT
-# ------------------------------------------------------------
 def logout_view(request):
     logout(request)
     return redirect('login')
 
 
-# ------------------------------------------------------------
-# DASHBOARD
-# ------------------------------------------------------------
 @login_required
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
 
 
-# ------------------------------------------------------------
-# FORGOT PASSWORD (Send Email)
-# ------------------------------------------------------------
 def forgotPassword(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -88,10 +73,6 @@ def forgotPassword(request):
             return redirect('forgotPassword')
     return render(request, 'accounts/forgotPassword.html')
 
-
-# ------------------------------------------------------------
-# VALIDATE RESET TOKEN (Click Link in Email)
-# ------------------------------------------------------------
 def resetpassword_validate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -100,7 +81,7 @@ def resetpassword_validate(request, uidb64, token):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
-        request.session['uid'] = uid  # Store uid in session for reset form
+        request.session['uid'] = uid
         messages.success(request, "Please reset your password.")
         return redirect('resetPassword')
     else:
@@ -108,9 +89,6 @@ def resetpassword_validate(request, uidb64, token):
         return redirect('login')
 
 
-# ------------------------------------------------------------
-# RESET PASSWORD (Final Form)
-# ------------------------------------------------------------
 def resetPassword(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -119,7 +97,7 @@ def resetPassword(request, uidb64, token):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
-        # Token OK → show reset page
+        
         if request.method == 'POST':
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
@@ -132,17 +110,13 @@ def resetPassword(request, uidb64, token):
             else:
                 messages.error(request, "Passwords do not match.")
 
-        return render(request, 'accounts/resetpassword.html')  # <- your template name
+        return render(request, 'accounts/resetpassword.html')
 
     else:
-        # Token invalid → this is causing redirect
         messages.error(request, "Session expired. Please try again.")
         return redirect('forgotPassword')
 
 
-# ------------------------------------------------------------
-# ACCOUNT ACTIVATION
-# ------------------------------------------------------------
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))

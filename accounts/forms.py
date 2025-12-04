@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
-User = get_user_model()  # ✅ this points to your custom model (accounts.Account)
+User = get_user_model()
 
 
 class RegistrationForm(UserCreationForm):
@@ -52,7 +52,7 @@ class RegistrationForm(UserCreationForm):
     )
 
     class Meta:
-        model = User  # ✅ uses your custom user model
+        model = User
         fields = ['full_name', 'username', 'email', 'password1', 'password2']
 
     def save(self, commit=True):

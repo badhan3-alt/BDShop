@@ -2,22 +2,20 @@ from django.db import models
 from django.utils.text import slugify
 import random
 import string
-from category.models import Category  # fixed import
+from category.models import Category
 
 
-# Function to generate order numbers
 def generate_order_number():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
 
 
-# Product model
 class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='products'
     )
     name = models.CharField(max_length=150)
     slug = models.SlugField(max_length=160, unique=True, blank=True)
-    short_description = models.TextField(blank=True, null=True)  # <-- fix for existing DB
+    short_description = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField(default=0)
@@ -26,7 +24,6 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # Automatically generate slug on save
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

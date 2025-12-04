@@ -3,25 +3,21 @@ from django.contrib.auth.decorators import login_required
 from orders.models import Order, OrderProduct
 from .models import Transaction, ReturnRequest, UserSettings, ReceivedOrder
 
-# ================= My Order History =================
 @login_required
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-id')
     return render(request, 'dashboard/my_orders.html', {'orders': orders})
 
-# ================= Transactions =================
 @login_required
 def transactions(request):
     transactions = Transaction.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'dashboard/transactions.html', {'transactions': transactions})
 
-# ================= Return Requests =================
 @login_required
 def return_requests(request):
     returns = ReturnRequest.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'dashboard/return_requests.html', {'returns': returns})
 
-# ================= User Settings =================
 @login_required
 def settings_view(request):
     settings_obj, created = UserSettings.objects.get_or_create(user=request.user)
@@ -32,13 +28,11 @@ def settings_view(request):
         return redirect('dashboard:settings')
     return render(request, 'dashboard/settings.html', {'settings': settings_obj})
 
-# ================= My Selling Items =================
 @login_required
 def my_selling_items(request):
     received_orders = ReceivedOrder.objects.filter(seller=request.user).order_by('-created_at')
     return render(request, 'dashboard/my_selling_items.html', {'received_orders': received_orders})
 
-# ================= Received Orders =================
 @login_required
 def received_orders(request):
     orders = ReceivedOrder.objects.filter(seller=request.user).order_by('-created_at')
