@@ -52,10 +52,10 @@
         <div class="products-container">
           {% for product in products %}
           <div class="product-card">
-            <a href="{% url 'product_detail' product.slug %}" class="text-decoration-none">
+            <a href="{% url 'store:product_detail' product.slug %}" class="text-decoration-none">
               <img src="{{ product.image.url }}" alt="{{ product.name }}">
               <h3>{{ product.name }}</h3>
-              <p>${{ product.price }}</p>
+              <p>৳{{ product.price }}</p>
               <button class="btn-gradient" style="margin: 20px;">View Details</button>
               
 

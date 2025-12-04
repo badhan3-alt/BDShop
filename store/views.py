@@ -2,6 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from store.models import Product
 from category.models import Category
 from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from carts.models import Cart
 
 def store(request):
     products = Product.objects.filter(available=True)
@@ -51,3 +54,24 @@ def search(request):
         'keyword': keyword,
     }
     return render(request, 'store/store.html', context)
+
+@login_required(login_url='login')
+def checkout(request):
+    # Get user cart, if exists
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        return redirect('store')
+
+    cart_items = cart.items.all()  # related_name should be "items"
+    total = sum(item.total_price for item in cart_items)
+
+    context = {
+        'cart': cart,
+        'cart_items': cart_items,
+        'total': total,
+    }
+
+    return render(request, 'orders/checkout.html', context)
+
+

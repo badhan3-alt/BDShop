@@ -125,7 +125,7 @@ nav ul li a {
 </li>
 
           <li>
-  <a class="nav-item" href="{% url 'store' %}">
+  <a class="nav-item" href="{% url 'store:checkout' %}">
     <i class="fa-solid fa-store"></i> Store<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   </a>
@@ -137,7 +137,7 @@ nav ul li a {
 <div class="d-flex align-items-center gap-3">
     <!-- Search Form -->
 
-<form action="{% url 'search' %}" class="d-flex align-items-center navbar-search" role="search" method="GET">
+<form action="{% url 'store:search' %}" class="d-flex align-items-center navbar-search" role="search" method="GET">
   <input 
       class="form-control me-2 search-input" 
       type="search" 

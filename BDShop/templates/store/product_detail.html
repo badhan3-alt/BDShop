@@ -15,7 +15,8 @@
     <p class="text-muted">Price: ৳{{ product.price }}</p>
     <p>{{ product.description }}</p>
     <p>Stock: {{ product.stock }}</p>
-    <a href="#" class="btn-gradient" style="text-decoration: none;">Buy Now</a>
+    <a href="{% url 'store:checkout' %}" class="btn-gradient" style="text-decoration: none;">Buy Now</a>
+
     <a href="{% url 'carts:add_cart' product.id %}" class="btn-gradient" style="text-decoration: none;">Add to Cart</a>
 
 </div>

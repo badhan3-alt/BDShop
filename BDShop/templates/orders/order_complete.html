@@ -14,7 +14,7 @@
     <p>Phone: {{ order.phone }}</p>
     <p>Address: {{ order.address_line_1 }}, {{ order.address_line_2 }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
 
-    <a href="{% url 'store' %}" class="btn btn-primary mt-3">Continue Shopping</a>
+    <a href="{% url 'store:store' %}" class="btn btn-primary mt-3">Continue Shopping</a>
 </div>
 
 <style>
