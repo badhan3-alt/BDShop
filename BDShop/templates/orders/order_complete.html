@@ -6,7 +6,7 @@
     <h2>Thank you for your order!</h2>
     <p>Your order <strong>{{ order.order_number }}</strong> has been successfully placed.</p>
     <p>Status: <strong>{{ order.status }}</strong></p>
-    <p>Total Paid: ${{ order.order_total|floatformat:2 }}</p>
+    <p>Total Paid: ৳{{ order.order_total|floatformat:2 }}</p>
 
     <h4>Billing Details:</h4>
     <p>Name: {{ order.first_name }} {{ order.last_name }}</p>

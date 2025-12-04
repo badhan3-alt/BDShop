@@ -7,51 +7,41 @@
 <div class="payment-container">
     <h2>Payment for Order: {{ order.order_number }}</h2>
 
-    <!-- Billing Details -->
     <h4>Billing Details:</h4>
     <p>Name: {{ order.first_name }} {{ order.last_name }}</p>
     <p>Email: {{ order.email }}</p>
     <p>Phone: {{ order.phone }}</p>
     <p>Address: {{ order.address_line_1 }}, {{ order.address_line_2 }}, {{ order.city }}, {{ order.state }}, {{ order.country }}</p>
 
-    <!-- Order Summary -->
     <h4>Order Summary:</h4>
     <ul>
         {% for item in cart_items %}
         <li>{{ item.product.name }} x {{ item.quantity }} 
-            <span>${{ item.product.price|floatformat:2 }}</span>
+            <span>৳{{ item.product.price|floatformat:2 }}</span>
         </li>
         {% endfor %}
     </ul>
-    <h5>Total: ${{ total|floatformat:2 }}</h5>
+    <h5>Total: ৳{{ total|floatformat:2 }}</h5>
 
     <!-- PAY NOW button -->
     <button type="button" class="btn-pay" onclick="openPaymentOptions()">Pay Now</button>
 </div>
 
-<!-- ===========================
-      PAYMENT OPTIONS MODAL
-=========================== -->
 <div id="paymentModal" class="modal">
     <div class="modal-content">
         <h3>Select Payment Method</h3>
 
-        <!-- COD FORM -->
         <form method="POST" action="{% url 'orders:cod_order' %}">
             {% csrf_token %}
             <input type="hidden" name="order_number" value="{{ order.order_number }}">
             <button type="submit" class="payment-btn cod">Cash on Delivery (COD)</button>
         </form>
 
-        <!-- bKash button -->
         <button class="payment-btn bkash" onclick="showBkashForm()">bKash Payment</button>
         <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
 </div>
 
-<!-- ===========================
-      BKASH PAYMENT FORM MODAL
-=========================== -->
 <div id="bkashForm" class="modal">
     <div class="modal-content">
         <h3>bKash Payment</h3>
@@ -70,9 +60,6 @@
     </div>
 </div>
 
-<!-- ===========================
-      STYLES
-=========================== -->
 <style>
 .modal {
     display: none;
@@ -120,9 +107,6 @@
 }
 </style>
 
-<!-- ===========================
-      JAVASCRIPT
-=========================== -->
 <script>
 function openPaymentOptions() {
     document.getElementById("paymentModal").style.display="flex";
