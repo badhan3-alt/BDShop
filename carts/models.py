@@ -6,6 +6,7 @@ class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    cart_id = models.CharField(max_length=250, blank=True)
 
     def __str__(self):
         return f"Cart ({self.id}) for {self.user.email if self.user else 'Guest'}"

@@ -70,8 +70,9 @@ def forgotPassword(request):
             return redirect('login')
         else:
             messages.error(request, "Account with this email does not exist.")
-            return redirect('forgotPassword')
-    return render(request, 'accounts/forgotPassword.html')
+            return redirect('forgotPass')
+    return render(request, 'accounts/forgot-Password.html')
+
 
 def resetpassword_validate(request, uidb64, token):
     try:
@@ -114,7 +115,7 @@ def resetPassword(request, uidb64, token):
 
     else:
         messages.error(request, "Session expired. Please try again.")
-        return redirect('forgotPassword')
+        return redirect('forgot-Password')
 
 
 def activate(request, uidb64, token):

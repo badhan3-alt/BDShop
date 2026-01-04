@@ -12,7 +12,7 @@ def place_order(request):
     cart_items = cart.items.all()
 
     if not cart_items.exists():
-        return redirect('store')
+        return redirect('orders:store')
 
     total = sum(item.product.price * item.quantity for item in cart_items)
     tax = 0
@@ -76,25 +76,46 @@ def payment_view(request, order_number):
 
 
 
-from django.shortcuts import render, redirect
-from carts.models import CartItem, Cart
+from django.shortcuts import render, redirect, get_object_or_404
+from carts.models import Cart, CartItem
+from store.models import Product
 
 def checkout(request):
     current_user = request.user
-
     cart_items = []
+
+    product_id = request.GET.get('product_id')
 
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=current_user).first()
         if not cart:
-            return redirect('store')
+            cart = Cart.objects.create(user=current_user)
+
+        if product_id:
+            product = get_object_or_404(Product, id=product_id)
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+
         cart_items = CartItem.objects.filter(cart=cart)
 
     else:
         cart_id = request.session.get('cart_id')
         if not cart_id:
-            return redirect('store')
-        cart_items = CartItem.objects.filter(cart__cart_id=cart_id)
+            cart = Cart.objects.create(cart_id=str(product_id or 'guest'))
+            request.session['cart_id'] = cart.id
+        else:
+            cart = Cart.objects.get(cart_id=cart_id)
+
+        if product_id:
+            product = get_object_or_404(Product, id=product_id)
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+
+        cart_items = CartItem.objects.filter(cart__cart_id=cart.id)
 
     total = sum(item.product.price * item.quantity for item in cart_items)
 
@@ -133,7 +154,7 @@ def cod_order(request):
         return redirect('orders:order_complete', order_number=order.order_number)
     
     else:
-        return redirect('store')
+        return redirect('store:store')
 
 
 
@@ -163,7 +184,7 @@ def process_bkash(request):
         return redirect('orders:order_complete', order_number=order.order_number)
 
     else:
-        return redirect('store')
+        return redirect('store:store')
 
 
 @login_required
